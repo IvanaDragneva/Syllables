@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Урок за сричките</title>
+    <script src="suica.min.js"></script>
+
+    <script>
+    function main()
+    {
+        sui = new Suica();
+        orthographic(-1000,1000);
+        lookAt([0,0,100],[0,0,0],[0,1,0]);
+        //групи за кубчетата, които ще съдържат срички по стените си
+        firstCube = group([]);
+        secondCube = group([]);
+        thirdCube = group([]);
+
+        //всички срички, които ще бъдат по стените на кубчетата
+        po = group([segment([-40,130,50],[0,130,50]).custom({color:[0,0,0]}),
+                    segment([-40,130,50],[-40,90,50]).custom({color:[0,0,0]}),
+                    segment([0,130,50],[0,90,50]).custom({color:[0,0,0]}),
+                    circle([25, 112, 50], 20).custom({mode:Suica.LINE, color:[0,0,0]})]);
+
+        ka = group([segment([-30,-60,40],[30,-60,40]).custom({color:[0,0,0],focus:([0,1,0])}),
+                    segment([0,-60,40],[30,-60,10]).custom({color:[0,0,0], focus:([0,1,0])}),
+                    segment([0,-60,40],[-30,-60,10]).custom({color:[0,0,0], focus:([0,1,0])}),
+                    segment([-30,-60,-20],[30,-60,0]).custom({color:[0,0,0], focus:([0,1,0])}),
+                    segment([-30,-60,-20],[30,-60,-40]).custom({color:[0,0,0], focus:([0,1,0])}),
+                    segment([0,-60,-10],[0,-60,-30]).custom({color:[0,0,0], focus:([0,1,0])})]);
+        ka.spin = radians(-90);
+
+        pri = group([segment([-30,50,155],[30,50,155]).custom({color:[0,0,0], focus:([0,1,0])}),
+                    segment([-30,50,130],[30,50,130]).custom({color:[0,0,0], focus:([0,1,0])}),
+                    segment([-30,50,130],[-30,50,155]).custom({color:[0,0,0], focus:([0,1,0])}),
+                    segment([-30,50,120],[30,50,120]).custom({color:[0,0,0], focus:([0,1,0])}),
+                    ellipse([-50, 108, 15], [17,12]).custom({mode:Suica.LINE, color:[0,0,0], focus:[1,0,0]}),
+                    segment([-30,50,90],[30,50,90]).custom({color:[0,0,0], focus:([0,1,0])}),
+                    segment([-30,50,65],[30,50,65]).custom({color:[0,0,0], focus:([0,1,0])}),
+                    segment([30,50,90],[-30,50,65]).custom({color:[0,0,0], focus:([0,1,0])})]);
+
+        zhi = group([segment([30,-50,90],[-30,-50,90]).custom({color:[0,0,0],  focus:([0,1,0])}),
+                    segment([30,-50,70],[-30,-50,110]).custom({color:[0,0,0], focus:([0,1,0])}),
+                    segment([30,-50, 110],[-30,-50,70]).custom({color:[0,0,0], focus:([0,1,0])}),
+                    segment([30,-50,120],[-30,-50,120]).custom({color:[0,0,0], focus:([0,1,0])}),
+                    segment([30,-50,150],[-30,-50,150]).custom({color:[0,0,0], focus:([0,1,0])}),
+                    segment([30,-50,120],[-30,-50,150]).custom({color:[0,0,0], focus:([0,1,0])})]);
+
+        re = group([segment([30,-40,160],[-30,-40,160]).custom({color:[0,0,0],focus:([0,1,0])}),
+                    ellipse([25, 160, 12], [20,15]).custom({mode:Suica.LINE, color:[0,0,0],focus:[0,1,0]}),
+                    segment([30,0,160],[-30,0,160]).custom({color:[0,0,0],  focus:([0,1,0])}),
+                    segment([30,0,160],[30,35,160]).custom({color:[0,0,0], focus:([0,1,0])}),
+                    segment([0,0,160],[0,35,160]).custom({color:[0,0,0],  focus:([0,1,0])}),
+                    segment([-30,0,160],[-30,35,160]).custom({color:[0,0,0],  focus:([0,1,0])})]);
+
+        ko = group([segment([-40,140,-50],[-40,80,-50]).custom({color:[0,0,0]}),
+                    segment([-40,110,-50],[-10,140,-50]).custom({color:[0,0,0]}),
+                    segment([-40,110,-50],[-10,80,-50]).custom({color:[0,0,0]}),
+                    ellipse([20, 110, -50], [23,33]).custom({mode:Suica.LINE, color:[0,0,0]})]);
+
+        muk = group([segment([-30,-250,155],[30,-250,155]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([-30,-250,135],[30,-250,135]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([-30,-250,155],[0,-250,145]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([-30,-250,135],[0,-250,145]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([-30,-250,130],[-30,-250,115]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([-30,-250,115],[20,-250,115]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    ellipse([250,107,-15], [15,8]).custom({color:[0,0,0], focus:[1,0,0],mode:Suica.LINE}),
+                    segment([-30,-250,90],[30,-250,90]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([0,-250,90],[-30,-250,70]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([0,-250,90],[30,-250,70]).custom({color:[0,0,0],  focus:[0,1,0]})]);
+
+        la = group([segment([-30,-275,60],[30,-255,60]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([-30,-275,60],[30,-295,60]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([-30,-325,60],[30,-305,60]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([-30,-325,60],[30,-345,60]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([0,-315,60],[0,-335,60]).custom({color:[0,0,0],  focus:[0,1,0]})]);
+
+        mo = group([segment([-50,-260,140],[-50,-260,85]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([-50,-300,140],[-50,-300,85]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([-50,-300,140],[-50,-280,112]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([-50,-260,140],[-50,-280,112]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    ellipse([325,112,50], [20,28]).custom({color:[0,0,0], mode:Suica.LINE})]);
+
+        pi = group([segment([-30,-350,70],[30,-350,70]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([-30,-350,105],[30,-350,105]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([-30,-350,70],[-30,-350,105]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([-30,-350,120],[30,-350,120]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([-30,-350,150],[30,-350,150]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([-30,-350,150],[30,-350,120]).custom({color:[0,0,0],  focus:[0,1,0]})]);
+
+        q = group([segment([-30,-290,160],[30,-290,160]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    ellipse([305,160,14], [17,15]).custom({color:[0,0,0], focus:[0,1,0],mode:Suica.LINE}),
+                    segment([-2.5,-295,160],[30,-315,160]).custom({color:[0,0,0],  focus:[0,1,0]})]);
+
+        lq = group([segment([50,-260,140],[50,-280,85]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([50,-300,140],[50,-280,85]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([50,-330,140],[50,-330,85]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    ellipse([314,100,-50], [15,17]).custom({color:[0,0,0], mode:Suica.LINE}),
+                    segment([50,-307,140],[50,-326,109]).custom({color:[0,0,0],  focus:[0,1,0]})]);
+
+        to = group([segment([-50,320,140],[-50,320,85]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([-50,300,140],[-50,340,140]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    ellipse([-280,113,50], [20,29]).custom({color:[0,0,0], mode:Suica.LINE})]);
+
+        tel = group([segment([30,350,145],[-30,350,145]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([-30,350,160],[-30,350,130]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([30,350,125],[-30,350,125]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([-30,350,125],[-30,350,105]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([0,350,125],[0,350,105]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([30,350,125],[30,350,105]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([30,350,98],[-30,350,80]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([30,350,62],[-30,350,80]).custom({color:[0,0,0],  focus:[0,1,0]})]);
+
+        mi = group([segment([30,340,60],[-30,340,60]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([30,305,60],[-30,305,60]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([-30,340,60],[0,322.5,60]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([-30,305,60],[0,322.5,60]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([30,290,60],[-30,290,60]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([30,260,60],[-30,260,60]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([30,290,60],[-30,260,60]).custom({color:[0,0,0],  focus:[0,1,0]})]);
+
+        pla = group([segment([30,250,65],[-30,250,65]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([-30,250,65],[-30,250,90]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([30,250,90],[-30,250,90]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([30,250,97],[-30,250,110]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([30,250,123],[-30,250,110]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([30,250,130],[-30,250,142.5]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([30,250,155],[-30,250,142.5]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([0,250,136],[0,250,149]).custom({color:[0,0,0],  focus:[0,1,0]})]);
+
+        sa = group([segment([30,340,160],[-30,320,160]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([30,300,160],[-30,320,160]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([0,310,160],[0,330,160]).custom({color:[0,0,0],  focus:[0,1,0]})]);
+
+        za = group([segment([50,280,70],[50,300,145]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                    segment([50,280,70],[50,260,145]).custom({color:[0,0,0],  focus:[0,1,0]}),
+                     segment([50,290,107.5],[50,270,107.5]).custom({color:[0,0,0],  focus:[0,1,0]})]);
+
+        //извивка са буквата С
+        var currY = 290;
+        var lastY = currY - 0.1;
+        var lastX = -30;
+
+        var index = -30;
+        while (index <= 30)
+        {
+
+            s = segment([index,currY + 293,160],[lastX,lastY + 294,160]).custom({color:[0,0,0],  focus:[0,1,0]});
+            sa.add(s);
+
+            currY = -Math.sqrt(900 - Math.pow(index, 2));
+            lastX = index;
+            lastY = currY;
+            index+=1;
+
+        }
+        //извивка за буквата З
+        var currY = 290;
+        var lastY = currY - 0.1;
+        var lastX = -20;
+
+        var index = -20;
+        while (index <= 20)
+        {
+
+            z1 = segment([50,currY + 330,index+85],[50,lastY + 331,lastX+85]).custom({color:[0,0,0],  focus:[0,1,0]});
+            z2 = segment([50,currY + 330,index+125],[50,lastY + 331,lastX+125]).custom({color:[0,0,0],  focus:[0,1,0]});
+            za.add(z1);
+            za.add(z2);
+
+            currY = -Math.sqrt(400 - Math.pow(index, 2));
+            lastX = index;
+            lastY = currY;
+            index+=1;
+
+        }
+
+        c1 = cube([0,110,0], 100).custom({color:[0,1,0],  focus:[0,1,0]});
+        c2 = cube([300,110,0], 100).custom({color:[0,0,1],  focus:[0,1,0]});
+        c3 = cube([-300,110,0], 100).custom({color:[1,0,0],  focus:[0,1,0]});
+
+        firstCube.add(po);
+        firstCube.add(ka);
+        firstCube.add(c1);
+        firstCube.add(pri);
+        firstCube.add(zhi);
+        firstCube.add(re);
+        firstCube.add(ko);
+        firstCube.interactive = true;
+        firstCube.merge();
+        firstCube.center=[0,110,0];
+        firstCube.spin = radians(30);
+        firstCube.focus = [0,1,0.3];
+        firstCube.origin = [0,110,0];
+
+        secondCube.add(c2);
+        secondCube.add(muk);
+        secondCube.add(la);
+        secondCube.add(mo);
+        secondCube.add(pi);
+        secondCube.add(q);
+        secondCube.add(lq);
+        secondCube.interactive = true;
+        secondCube.merge();
+
+        secondCube.center = [300, 110, 0];
+        secondCube.spin = radians(30);
+        secondCube.focus = [0,1,0.3];
+        secondCube.origin = [300,110,0];
+
+        thirdCube.add(c3);
+        thirdCube.add(to);
+        thirdCube.add(tel);
+        thirdCube.add(mi);
+        thirdCube.add(pla);
+        thirdCube.add(sa);
+        thirdCube.add(za);
+        thirdCube.interactive = true;
+        thirdCube.merge();
+        thirdCube.center = [-300,110,0];
+        thirdCube.spin = radians(30);
+        thirdCube.focus = [0,1,0.3];
+        thirdCube.origin = [-300,110,0];
+
+
+        sui.gl.canvas.addEventListener('mousedown',mouseDown);
+        sui.gl.canvas.addEventListener('mousemove',mouseMove);
+        sui.gl.canvas.addEventListener('mouseup',mouseUp);
+        sui.gl.canvas.addEventListener('contextmenu',contextMenu,false);
+    }
+
+
+    var x;
+    var y;
+    var lastX;
+    var lastY;
+    var obj = null;
+    var lastObj = null;
+
+    function contextMenu(event)
+    {
+        event.preventDefault();
+    }
+
+    function mouseDown(event)
+    {
+        x=event.clientX;
+        y=event.clientY;
+        obj=sui.objectAtPoint(x,y);
+
+        lastObj=sui.objectAtPoint(x,y);
+        lastX = x;
+        lastY = y;
+    }
+
+    var tempValue = 5;
+    function mouseMove(event)
+    {
+        if (obj)
+        {
+            //с ляв бутон на мишката, придвижваме натиснатия обект
+            if (event.which == 1)
+            {
+                obj.center[0] += (event.clientX-x);
+                obj.center[1] -= (event.clientY-y);
+            }
+            //с десен бутон на мишката, завъртаме натиснатия обект
+            if (event.which == 3)
+            {
+                if (lastX > event.clientX)
+                {
+                    obj.spin += radians(5);
+
+
+                }
+                if (lastX < event.clientX)
+                {
+                    obj.spin -= radians(5);
+
+
+                }
+                if (lastY > event.clientY)
+                {
+                    obj.focus[2] -= radians(tempValue);
+
+
+                }
+                if (lastY < event.clientY)
+                {
+                    obj.focus[2] += radians(tempValue);
+
+                }
+
+                lastX = event.clientX;
+                lastY = event.clientY;
+            }
+        }
+        x=event.clientX;
+        y=event.clientY;
+    }
+    function mouseUp(event)
+    {
+        obj=null;
+    }
+
+
+    </script>
+
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body onload="main()">
+<h1> Срички &#9997;</h1>
+<div class="lesson">
+    <h2><u>I. Що е то сричка? 🖉</u></h2>
+<div class="partition">
+<p>В българския език сричката се състои от гласни и съгласни звукове. С помощта на сричките се образуват думи. В една сричка съществува само един гласен звук. Това означава, че броят на сричките в една дума е равен на броя на гласните й звукове.</p>
+    <p class="centerText"><img src="duma1.png" width="300" height="100">
+        <img src="duma2.png" width="300" height="100"></p>
+</div>
+    <h2><u>II. Видове срички  🖉</u></h2>
+    <div class="partition">
+        <p style="font-size: 20px"><i>Сричките се разделят на следните типове:</i></p>
+<ol>
+    <li><a href="OtvoreniZatvoreni.html">Отворени и затворени</a></li>
+    <li><a href="TvurdiMeki.html">Твърди и меки</a></li>
+    <li><a href="UdareniNeudareni.html">Ударени и неударени</a></li>
+</ol>
+    </div>
+    <h2><u>III. Примери  🖉</u></h2>
+    <div class="partition">
+    <ul>
+<li>Една дума може да се състои от една сричка. Тогава се нарича едносрична.</li>
+    <p><i>Примери:</i></p>
+        <p class="centerText"><img src="duma3.png" width="500" height="100"></p>
+    <li>Ако една дума се състои от две срички, то тя се нарича двусрична.</li>
+    <p><i>Примери:</i></p>
+        <p class="centerText"><img src="duma4.png" width="500" height="100"></p>
+    <li>Същото важи за трисрична дума, четирисрична и т.н.</li>
+    <li>Някои срички се състоят от една буква. Думи, които съдържат такива срички са например:</li>
+        <p class="centerText"><img src="duma5.png" width="500" height="100"></p>
+    </ul>
+    </div>
+    <h2><u>IV. Упражнения  🖉</u></h2>
+    <div class="partition">
+        <h3 class="centerText">Указания за работа:</h3>
+        <p>По-надолу са изобразени кубчета със срички по стените. За да движите едно кубче, натиснете с ляв бутон на мишката върху него и го влачете. За да завъртите кубчето, натиснете с десен бутон върху него и движете мишката.</p>
+        <h4><u>Упражнение 1.</u> Опитайте се да съставите думи с кубчетата, като ги нареждате едно до друго, завъртяни, на която сричка си изберете.</h4>
+        <h4><u>Упражнение 2.</u> Кое кубче съдържа мека сричка?</h4>
+        <h4><u>Упражнение 3.</u> Опитайте се да съставите думи със срички само от едно кубче. С кое кубче се получават най-много думи?</h4>
+        <h4><u>Упражнение 4.</u> Избройте всички затворени срички, изобразени върху кубчетата.</h4>
+
+        <canvas style="border: brown dotted 2px" width="800" height="400">
+        </canvas>
+
+        <h3 class="centerText">Отговори:</h3>
+        <p><u>Упражнение 2</u>: Меката сричка е <b>ля</b>.</p>
+        <p><u>Упражнение 3</u>: <span style="color:red">Червеното кубче</span> съдържа 1 дума: <b>пла-то</b>.</p>
+        <p style="margin-left:120px"><span style="color:green">Зеленото кубче</span> съдържа 3 думи: <b>по-ка-жи</b>, <b>ре-жи</b>, <b>ка-жи</b>.</p>
+        <p style="margin-left:120px"><span style="color:blue">Синьото кубче</span> съдържа 7 думи: <b>мо-я</b>, <b>мо-ля</b>, <b>пи-ля</b>, <b>пи-я</b>, <b>мо-мък</b>, <b>пи-ла</b>, <b>ла-я</b>.</p>
+        <p style="margin-left:120px">Отговорът е: <span style="color:blue">синьото кубче</span>.</p>
+        <p><u>Упражнение 4</u>: Затворените срички са две: <b>мък</b> и <b>тел</b>.</p>
+    </div>
+</div>
+</body>
+</html>
